@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CDM86 - Dashboard Professionale</title>
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/animations.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="assets/js/config.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="logo-icon">
+                        <i class="fas fa-cube"></i>
+                    </div>
+                    <div class="logo-text">
+                        <h1>CDM86</h1>
+                        <span>cdm86.com</span>
+                    </div>
+                </div>
+                
+                <nav class="main-nav">
+                    <button class="nav-btn active" data-panel="users">
+                        <i class="fas fa-users"></i>
+                        <span>Utenti</span>
+                    </button>
+                    <button class="nav-btn" data-panel="admin">
+                        <i class="fas fa-cog"></i>
+                        <span>Amministratori</span>
+                    </button>
+                    <button class="nav-btn" data-panel="developer">
+                        <i class="fas fa-code"></i>
+                        <span>Sviluppatori</span>
+                    </button>
+                </nav>
+                
+                <div class="user-profile">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-info">
+                        <span class="user-name">Utente</span>
+                        <span class="user-role">Pannello Principale</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Users Panel (Default) -->
+            <div id="users-panel" class="panel active">
+                <div class="panel-header">
+                    <h2>Dashboard Utenti</h2>
+                    <p>Pannello principale per la gestione e visualizzazione delle funzionalità utente</p>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>Progetti Attivi</h3>
+                            <div class="stat-number">24</div>
+                            <span class="stat-change positive">+12%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>Task Completati</h3>
+                            <div class="stat-number">156</div>
+                            <span class="stat-change positive">+8%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>Ore Lavorate</h3>
+                            <div class="stat-number">340</div>
+                            <span class="stat-change neutral">+2%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>Obiettivi Raggiunti</h3>
+                            <div class="stat-number">89%</div>
+                            <span class="stat-change positive">+15%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="content-grid">
+                    <div class="main-widget">
+                        <div class="widget-header">
+                            <h3>Progetti Recenti</h3>
+                            <button class="btn-secondary">Vedi Tutti</button>
+                        </div>
+                        <div class="project-list">
+                            <div class="project-item">
+                                <div class="project-info">
+                                    <div class="project-avatar">
+                                        <i class="fas fa-globe"></i>
+                                    </div>
+                                    <div class="project-details">
+                                        <h4>Sito Web CDM86</h4>
+                                        <p>Sviluppo interfaccia utente</p>
+                                        <div class="project-meta">
+                                            <span class="project-status active">In Corso</span>
+                                            <span class="project-date">Aggiornato 2 ore fa</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="project-progress">
+                                    <div class="progress-bar">
+                                        <div class="progress-fill progress-75"></div>
+                                    </div>
+                                    <span class="progress-text">75%</span>
+                                </div>
+                            </div>
+                            
+                            <div class="project-item">
+                                <div class="project-info">
+                                    <div class="project-avatar">
+                                        <i class="fas fa-mobile-alt"></i>
+                                    </div>
+                                    <div class="project-details">
+                                        <h4>App Mobile</h4>
+                                        <p>Ottimizzazione responsive</p>
+                                        <div class="project-meta">
+                                            <span class="project-status planning">Pianificazione</span>
+                                            <span class="project-date">Inizia domani</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="project-progress">
+                                    <div class="progress-bar">
+                                        <div class="progress-fill progress-25"></div>
+                                    </div>
+                                    <span class="progress-text">25%</span>
+                                </div>
+                            </div>
+                            
+                            <div class="project-item">
+                                <div class="project-info">
+                                    <div class="project-avatar">
+                                        <i class="fas fa-database"></i>
+                                    </div>
+                                    <div class="project-details">
+                                        <h4>Sistema Database</h4>
+                                        <p>Integrazione backend</p>
+                                        <div class="project-meta">
+                                            <span class="project-status completed">Completato</span>
+                                            <span class="project-date">Finito ieri</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="project-progress">
+                                    <div class="progress-bar">
+                                        <div class="progress-fill progress-100"></div>
+                                    </div>
+                                    <span class="progress-text">100%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="sidebar-widgets">
+                        <div class="widget">
+                            <div class="widget-header">
+                                <h3>Attività Rapide</h3>
+                            </div>
+                            <div class="quick-actions">
+                                <button class="action-btn primary">
+                                    <i class="fas fa-plus"></i>
+                                    <span>Nuovo Progetto</span>
+                                </button>
+                                <button class="action-btn secondary">
+                                    <i class="fas fa-upload"></i>
+                                    <span>Carica File</span>
+                                </button>
+                                <button class="action-btn tertiary">
+                                    <i class="fas fa-share"></i>
+                                    <span>Condividi</span>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="widget">
+                            <div class="widget-header">
+                                <h3>Notifiche</h3>
+                            </div>
+                            <div class="notifications">
+                                <div class="notification-item">
+                                    <div class="notification-icon">
+                                        <i class="fas fa-bell"></i>
+                                    </div>
+                                    <div class="notification-content">
+                                        <p>Nuovo aggiornamento disponibile</p>
+                                        <span class="notification-time">5 min fa</span>
+                                    </div>
+                                </div>
+                                <div class="notification-item">
+                                    <div class="notification-icon">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                    <div class="notification-content">
+                                        <p>Task completato con successo</p>
+                                        <span class="notification-time">1 ora fa</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Admin Panel (Hidden by default) -->
+            <div id="admin-panel" class="panel">
+                <div class="panel-header">
+                    <h2>Dashboard Amministratori</h2>
+                    <p>Pannello per la gestione avanzata del sistema</p>
+                </div>
+                <div class="coming-soon">
+                    <i class="fas fa-cogs"></i>
+                    <h3>Pannello Amministratori</h3>
+                    <p>Funzionalità in sviluppo</p>
+                </div>
+            </div>
+            
+            <!-- Developer Panel (Hidden by default) -->
+            <div id="developer-panel" class="panel">
+                <div class="panel-header">
+                    <h2>Dashboard Sviluppatori</h2>
+                    <p>Strumenti e risorse per sviluppatori</p>
+                </div>
+                <div class="coming-soon">
+                    <i class="fas fa-code"></i>
+                    <h3>Pannello Sviluppatori</h3>
+                    <p>Funzionalità in sviluppo</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html>
