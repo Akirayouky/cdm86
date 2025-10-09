@@ -64,21 +64,6 @@ CREATE INDEX idx_users_created_at ON users(created_at DESC);
 CREATE INDEX idx_users_role ON users(role);
 
 -- ============================================
--- TABELLA: user_favorites
--- Promozioni preferite degli utenti (Many-to-Many)
--- ============================================
-CREATE TABLE IF NOT EXISTS user_favorites (
-    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    promotion_id UUID NOT NULL REFERENCES promotions(id) ON DELETE CASCADE,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    
-    PRIMARY KEY (user_id, promotion_id)
-);
-
-CREATE INDEX idx_user_favorites_user ON user_favorites(user_id);
-CREATE INDEX idx_user_favorites_promotion ON user_favorites(promotion_id);
-
--- ============================================
 -- TABELLA: promotions
 -- Promozioni convenzionate con partner
 -- ============================================
@@ -183,6 +168,21 @@ CREATE INDEX idx_promotions_active ON promotions(is_active, validity_end_date);
 
 -- Indice full-text search
 CREATE INDEX idx_promotions_search ON promotions USING gin(to_tsvector('italian', title || ' ' || description || ' ' || partner_name));
+
+-- ============================================
+-- TABELLA: user_favorites
+-- Promozioni preferite degli utenti (Many-to-Many)
+-- ============================================
+CREATE TABLE IF NOT EXISTS user_favorites (
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    promotion_id UUID NOT NULL REFERENCES promotions(id) ON DELETE CASCADE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    
+    PRIMARY KEY (user_id, promotion_id)
+);
+
+CREATE INDEX idx_user_favorites_user ON user_favorites(user_id);
+CREATE INDEX idx_user_favorites_promotion ON user_favorites(promotion_id);
 
 -- ============================================
 -- TABELLA: referrals
