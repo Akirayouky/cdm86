@@ -12,6 +12,9 @@ const compression = require('compression');
 const rateLimit = require('express-rate-limit');
 const path = require('path');
 
+// Import database
+const { connectDB } = require('./utils/database');
+
 // Import routes
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
@@ -103,9 +106,15 @@ app.get('*', (req, res) => {
 // Error handling
 app.use(errorHandler);
 
-// Start server
-app.listen(PORT, () => {
-    console.log(`
+// Start server with database connection
+const startServer = async () => {
+    try {
+        // Connect to MongoDB
+        await connectDB();
+        
+        // Start Express server
+        const server = app.listen(PORT, () => {
+            console.log(`
     ╔═══════════════════════════════════════════════╗
     ║                                               ║
     ║    🚀 CDM86 Platform Server                  ║
@@ -115,16 +124,33 @@ app.listen(PORT, () => {
     ║    📅 Started: ${new Date().toLocaleString('it-IT')}  ║
     ║                                               ║
     ╚═══════════════════════════════════════════════╝
-    `);
-});
+            `);
+        });
 
-// Graceful shutdown
-process.on('SIGTERM', () => {
-    console.log('SIGTERM received, closing server...');
-    server.close(() => {
-        console.log('Server closed');
-        process.exit(0);
-    });
-});
+        // Graceful shutdown
+        process.on('SIGTERM', () => {
+            console.log('🛑 SIGTERM received, closing server...');
+            server.close(() => {
+                console.log('✅ Server closed');
+                process.exit(0);
+            });
+        });
+
+        process.on('SIGINT', () => {
+            console.log('🛑 SIGINT received, closing server...');
+            server.close(() => {
+                console.log('✅ Server closed');
+                process.exit(0);
+            });
+        });
+        
+    } catch (error) {
+        console.error('❌ Errore avvio server:', error.message);
+        process.exit(1);
+    }
+};
+
+// Start the application
+startServer();
 
 module.exports = app;
