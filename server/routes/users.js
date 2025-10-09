@@ -5,33 +5,31 @@
 
 const express = require('express');
 const router = express.Router();
+const userController = require('../controllers/userController');
+const { protect } = require('../middleware/auth'); // Middleware autenticazione
+
+// Applica middleware autenticazione a tutte le route
+router.use(protect);
 
 // GET /api/users/profile - Profilo utente
-router.get('/profile', async (req, res) => {
-    res.json({ 
-        message: 'User profile endpoint',
-        user: req.user 
-    });
-});
+router.get('/profile', userController.getProfile);
 
 // PUT /api/users/profile - Aggiorna profilo
-router.put('/profile', async (req, res) => {
-    res.json({ message: 'Update profile endpoint - da implementare' });
-});
+router.put('/profile', userController.updateProfile);
+
+// GET /api/users/dashboard - Dashboard con referral info
+router.get('/dashboard', userController.getDashboard);
 
 // GET /api/users/stats - Statistiche utente
-router.get('/stats', async (req, res) => {
-    res.json({ message: 'User stats endpoint - da implementare' });
-});
+router.get('/stats', userController.getStats);
 
 // GET /api/users/points - Saldo punti
-router.get('/points', async (req, res) => {
-    res.json({ message: 'User points endpoint - da implementare' });
-});
+router.get('/points', userController.getPoints);
 
 // GET /api/users/transactions - Storico transazioni
-router.get('/transactions', async (req, res) => {
-    res.json({ message: 'User transactions endpoint - da implementare' });
-});
+router.get('/transactions', userController.getTransactions);
+
+// GET /api/users/referral-link - Link di invito
+router.get('/referral-link', userController.getReferralLink);
 
 module.exports = router;

@@ -4,28 +4,53 @@
  */
 
 const jwt = require('jsonwebtoken');
+const { supabase } = require('../utils/supabase');
 
-// Verifica token JWT
-const authenticate = async (req, res, next) => {
+// Verifica token JWT e carica user da Supabase
+const protect = async (req, res, next) => {
     try {
         // Estrai token dall'header
-        const token = req.headers.authorization?.split(' ')[1];
+        let token;
+        if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+            token = req.headers.authorization.split(' ')[1];
+        }
         
         if (!token) {
             return res.status(401).json({
                 success: false,
-                error: 'Token non fornito'
+                message: 'Accesso negato. Token non fornito.'
             });
         }
 
         // Verifica token
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         
+        // Carica user dal database
+        const { data: user, error } = await supabase
+            .from('users')
+            .select('id, email, role, is_active')
+            .eq('id', decoded.id)
+            .single();
+
+        if (error || !user) {
+            return res.status(401).json({
+                success: false,
+                message: 'Utente non trovato'
+            });
+        }
+
+        if (!user.is_active) {
+            return res.status(403).json({
+                success: false,
+                message: 'Account disabilitato'
+            });
+        }
+        
         // Aggiungi user info alla request
         req.user = {
-            id: decoded.userId,
-            email: decoded.email,
-            role: decoded.role
+            id: user.id,
+            email: user.email,
+            role: user.role
         };
         
         next();
@@ -33,16 +58,19 @@ const authenticate = async (req, res, next) => {
         if (error.name === 'TokenExpiredError') {
             return res.status(401).json({
                 success: false,
-                error: 'Token scaduto'
+                message: 'Token scaduto. Effettua nuovamente il login.'
             });
         }
         
         return res.status(401).json({
             success: false,
-            error: 'Token non valido'
+            message: 'Token non valido'
         });
     }
 };
+
+// Alias per compatibilità
+const authenticate = protect;
 
 // Verifica ruolo
 const authorize = (...roles) => {
@@ -50,14 +78,14 @@ const authorize = (...roles) => {
         if (!req.user) {
             return res.status(401).json({
                 success: false,
-                error: 'Non autenticato'
+                message: 'Non autenticato'
             });
         }
         
         if (!roles.includes(req.user.role)) {
             return res.status(403).json({
                 success: false,
-                error: 'Non autorizzato'
+                message: `Accesso negato. Ruolo richiesto: ${roles.join(' o ')}`
             });
         }
         
@@ -66,6 +94,7 @@ const authorize = (...roles) => {
 };
 
 module.exports = {
+    protect,
     authenticate,
     authorize
 };

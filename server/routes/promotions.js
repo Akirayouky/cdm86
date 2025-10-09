@@ -5,50 +5,28 @@
 
 const express = require('express');
 const router = express.Router();
-const { authenticate } = require('../middleware/auth');
+const promotionController = require('../controllers/promotionController');
+const { protect } = require('../middleware/auth');
 
 // GET /api/promotions - Lista promozioni (public)
-router.get('/', async (req, res) => {
-    res.json({ 
-        message: 'Promotions list endpoint',
-        promotions: []
-    });
-});
+router.get('/', promotionController.getPromotions);
 
 // GET /api/promotions/:id - Dettaglio promozione
-router.get('/:id', async (req, res) => {
-    res.json({ 
-        message: 'Promotion detail endpoint',
-        id: req.params.id
-    });
-});
+router.get('/:id', promotionController.getPromotionById);
 
 // GET /api/promotions/category/:category - Per categoria
-router.get('/category/:category', async (req, res) => {
-    res.json({ 
-        message: 'Promotions by category',
-        category: req.params.category
-    });
-});
+router.get('/category/:category', promotionController.getByCategory);
 
 // POST /api/promotions/search - Ricerca
-router.post('/search', async (req, res) => {
-    res.json({ message: 'Search promotions endpoint - da implementare' });
-});
+router.post('/search', promotionController.searchPromotions);
 
-// GET /api/promotions/favorites - Preferite (auth required)
-router.get('/user/favorites', authenticate, async (req, res) => {
-    res.json({ message: 'User favorites endpoint - da implementare' });
-});
+// GET /api/promotions/user/favorites - Preferite (auth required)
+router.get('/user/favorites', protect, promotionController.getFavorites);
 
 // POST /api/promotions/:id/favorite - Aggiungi/rimuovi preferita
-router.post('/:id/favorite', authenticate, async (req, res) => {
-    res.json({ message: 'Toggle favorite endpoint - da implementare' });
-});
+router.post('/:id/favorite', protect, promotionController.toggleFavorite);
 
 // POST /api/promotions/:id/redeem - Riscatta promozione (auth required)
-router.post('/:id/redeem', authenticate, async (req, res) => {
-    res.json({ message: 'Redeem promotion endpoint - da implementare' });
-});
+router.post('/:id/redeem', protect, promotionController.redeemPromotion);
 
 module.exports = router;

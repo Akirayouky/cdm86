@@ -12,8 +12,8 @@ const compression = require('compression');
 const rateLimit = require('express-rate-limit');
 const path = require('path');
 
-// Import database
-const { connectDB } = require('./utils/database');
+// Import Supabase connection
+const { testConnection } = require('./utils/supabase');
 
 // Import routes
 const authRoutes = require('./routes/auth');
@@ -23,7 +23,7 @@ const referralRoutes = require('./routes/referrals');
 
 // Import middleware
 const { errorHandler } = require('./middleware/errorHandler');
-const { authenticate } = require('./middleware/auth');
+const { protect } = require('./middleware/auth');
 
 // Initialize Express
 const app = express();
@@ -90,9 +90,9 @@ app.get('/api/health', (req, res) => {
 
 // API Routes
 app.use('/api/auth', authRoutes);
-app.use('/api/users', authenticate, userRoutes);
-app.use('/api/promotions', promotionRoutes);
-app.use('/api/referrals', authenticate, referralRoutes);
+app.use('/api/users', userRoutes); // Auth gestito nei routes
+app.use('/api/promotions', promotionRoutes); // Alcune public, altre protected
+app.use('/api/referrals', referralRoutes); // Alcune public, altre protected
 
 // Catch-all route - serve index.html for SPA
 app.get('*', (req, res) => {
@@ -109,8 +109,9 @@ app.use(errorHandler);
 // Start server with database connection
 const startServer = async () => {
     try {
-        // Connect to MongoDB
-        await connectDB();
+        // Test Supabase connection
+        console.log('📡 Test connessione Supabase...');
+        await testConnection();
         
         // Start Express server
         const server = app.listen(PORT, () => {
@@ -118,6 +119,7 @@ const startServer = async () => {
     ╔═══════════════════════════════════════════════╗
     ║                                               ║
     ║    🚀 CDM86 Platform Server                  ║
+    ║    💾 Database: Supabase PostgreSQL          ║
     ║                                               ║
     ║    📡 Server: http://localhost:${PORT}       ║
     ║    🌐 Environment: ${process.env.NODE_ENV || 'development'}            ║
