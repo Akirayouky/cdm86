@@ -63,9 +63,15 @@ if (process.env.NODE_ENV !== 'production') {
     app.use(morgan('combined'));
 }
 
-// Static files
+// Static files - serve root folder first (for index.html, assets, etc)
 app.use(express.static(path.join(__dirname, '..'), {
-    maxAge: '1y',
+    maxAge: '1d',
+    etag: true
+}));
+
+// Static files - serve public folder (for login, dashboard, etc)
+app.use('/public', express.static(path.join(__dirname, '..', 'public'), {
+    maxAge: '1d',
     etag: true
 }));
 
@@ -94,9 +100,9 @@ app.use('/api/users', userRoutes); // Auth gestito nei routes
 app.use('/api/promotions', promotionRoutes); // Alcune public, altre protected
 app.use('/api/referrals', referralRoutes); // Alcune public, altre protected
 
-// Catch-all route - serve index.html for SPA
+// Catch-all route - serve index.html from root for SPA
 app.get('*', (req, res) => {
-    if (!req.path.startsWith('/api')) {
+    if (!req.path.startsWith('/api') && !req.path.startsWith('/public')) {
         res.sendFile(path.join(__dirname, '..', 'index.html'));
     } else {
         res.status(404).json({ error: 'Endpoint non trovato' });

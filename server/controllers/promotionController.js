@@ -23,6 +23,12 @@ exports.getPromotions = async (req, res) => {
             sortOrder = 'desc'
         } = req.query;
 
+        // Convert to numbers
+        const numLimit = parseInt(limit) || 20;
+        const numOffset = parseInt(offset) || 0;
+
+        console.log('📊 Promotions query:', { numLimit, numOffset, category, featured, active });
+
         let query = supabase
             .from('promotions')
             .select('*', { count: 'exact' });
@@ -48,7 +54,7 @@ exports.getPromotions = async (req, res) => {
         query = query.order(sortBy, { ascending: sortOrder === 'asc' });
 
         // Paginazione
-        query = query.range(offset, offset + limit - 1);
+        query = query.range(numOffset, numOffset + numLimit - 1);
 
         const { data: promotions, error, count } = await query;
 
@@ -59,14 +65,16 @@ exports.getPromotions = async (req, res) => {
             });
         }
 
+        console.log('✅ Promotions returned:', { count: promotions?.length, total: count, hasMore: numOffset + numLimit < count });
+
         res.json({
             success: true,
             data: promotions,
             pagination: {
                 total: count,
-                limit: parseInt(limit),
-                offset: parseInt(offset),
-                hasMore: offset + limit < count
+                limit: numLimit,
+                offset: numOffset,
+                hasMore: numOffset + numLimit < count
             }
         });
 
@@ -255,13 +263,14 @@ exports.getFavorites = async (req, res) => {
             .from('user_favorites')
             .select(`
                 promotion_id,
-                favorited_at,
-                promotion:promotions (*)
+                created_at,
+                promotions (*)
             `)
             .eq('user_id', userId)
-            .order('favorited_at', { ascending: false });
+            .order('created_at', { ascending: false });
 
         if (error) {
+            console.error('Supabase error in getFavorites:', error);
             return res.status(500).json({
                 success: false,
                 message: 'Errore durante il recupero dei preferiti'
@@ -269,8 +278,8 @@ exports.getFavorites = async (req, res) => {
         }
 
         const promotions = favorites.map(f => ({
-            ...f.promotion,
-            favoritedAt: f.favorited_at
+            ...f.promotions,
+            favoritedAt: f.created_at
         }));
 
         res.json({
@@ -296,6 +305,8 @@ exports.toggleFavorite = async (req, res) => {
         const userId = req.user.id;
         const { id: promotionId } = req.params;
 
+        console.log('Toggle favorite:', { userId, promotionId });
+
         // Verifica se promozione esiste
         const { data: promotion, error: promoError } = await supabase
             .from('promotions')
@@ -304,6 +315,7 @@ exports.toggleFavorite = async (req, res) => {
             .single();
 
         if (promoError || !promotion) {
+            console.error('Promotion not found:', promoError);
             return res.status(404).json({
                 success: false,
                 message: 'Promozione non trovata'
@@ -311,15 +323,18 @@ exports.toggleFavorite = async (req, res) => {
         }
 
         // Verifica se già nei preferiti
-        const { data: existing } = await supabase
+        const { data: existing, error: checkError } = await supabase
             .from('user_favorites')
-            .select('id')
+            .select('user_id, promotion_id')
             .eq('user_id', userId)
             .eq('promotion_id', promotionId)
-            .single();
+            .maybeSingle();
+
+        console.log('Check existing favorite:', { existing, checkError });
 
         if (existing) {
             // Rimuovi dai preferiti
+            console.log('Removing from favorites...');
             const { error: deleteError } = await supabase
                 .from('user_favorites')
                 .delete()
@@ -327,19 +342,23 @@ exports.toggleFavorite = async (req, res) => {
                 .eq('promotion_id', promotionId);
 
             if (deleteError) {
+                console.error('Delete error:', deleteError);
                 return res.status(500).json({
                     success: false,
-                    message: 'Errore durante la rimozione dai preferiti'
+                    message: 'Errore durante la rimozione dai preferiti',
+                    error: deleteError.message
                 });
             }
 
-            res.json({
+            console.log('Removed successfully');
+            return res.json({
                 success: true,
                 message: 'Promozione rimossa dai preferiti',
-                isFavorite: false
+                data: { isFavorite: false }
             });
         } else {
             // Aggiungi ai preferiti
+            console.log('Adding to favorites...');
             const { error: insertError } = await supabase
                 .from('user_favorites')
                 .insert([{
@@ -348,16 +367,19 @@ exports.toggleFavorite = async (req, res) => {
                 }]);
 
             if (insertError) {
+                console.error('Insert error:', insertError);
                 return res.status(500).json({
                     success: false,
-                    message: 'Errore durante l\'aggiunta ai preferiti'
+                    message: 'Errore durante l\'aggiunta ai preferiti',
+                    error: insertError.message
                 });
             }
 
-            res.json({
+            console.log('Added successfully');
+            return res.json({
                 success: true,
                 message: 'Promozione aggiunta ai preferiti',
-                isFavorite: true
+                data: { isFavorite: true }
             });
         }
 
@@ -365,7 +387,8 @@ exports.toggleFavorite = async (req, res) => {
         console.error('Errore toggle favorite:', error);
         res.status(500).json({
             success: false,
-            message: 'Errore del server'
+            message: 'Errore del server',
+            error: error.message
         });
     }
 };

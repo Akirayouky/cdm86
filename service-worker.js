@@ -1,38 +1,50 @@
 /**
- * CDM86 Service Worker
- * Gestisce caching, offline support, e background sync
+ * CDM86 Service Worker - DISABLED FOR DEVELOPMENT
+ * Cache disabilitata per evitare problemi durante lo sviluppo
  */
 
-const CACHE_NAME = 'cdm86-v1';
-const DYNAMIC_CACHE = 'cdm86-dynamic-v1';
+const CACHE_NAME = 'cdm86-v4-nocache';
+const DYNAMIC_CACHE = 'cdm86-dynamic-v4';
 
-// File da cachare immediatamente
-const STATIC_ASSETS = [
-    '/',
-    '/index.html',
-    '/assets/css/main.css',
-    '/assets/css/animations.css',
-    '/assets/js/main.js',
-    '/assets/js/config.js',
-    '/manifest.json',
-    'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap',
-    'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'
-];
+// NO FILES TO CACHE - Development mode
+const STATIC_ASSETS = [];
 
-// Install Event - Cache static assets
+// Install event - Skip caching in development mode
 self.addEventListener('install', (event) => {
-    console.log('[Service Worker] Installing...');
+    console.log('[Service Worker] Installing (no cache)...');
+    self.skipWaiting();
+});
+
+// Activate event - DELETE ALL OLD CACHES
+self.addEventListener('activate', (event) => {
+    console.log('[Service Worker] Activating and clearing all caches...');
     event.waitUntil(
-        caches.open(CACHE_NAME)
-            .then((cache) => {
-                console.log('[Service Worker] Caching static assets');
-                return cache.addAll(STATIC_ASSETS);
+        caches.keys().then(cacheNames => {
+            return Promise.all(
+                cacheNames.map(cacheName => {
+                    console.log('[Service Worker] Deleting cache:', cacheName);
+                    return caches.delete(cacheName);
+                })
+            );
+        }).then(() => {
+            console.log('[Service Worker] All caches cleared!');
+            return self.clients.claim();
+        })
+    );
+});
+
+// Fetch event - NO CACHING, always network
+self.addEventListener('fetch', (event) => {
+    event.respondWith(
+        fetch(event.request)
+            .then(response => {
+                return response;
             })
-            .catch((err) => {
-                console.error('[Service Worker] Cache failed:', err);
+            .catch(error => {
+                console.log('[Service Worker] Fetch failed:', error);
+                throw error;
             })
     );
-    self.skipWaiting();
 });
 
 // Activate Event - Clean old caches

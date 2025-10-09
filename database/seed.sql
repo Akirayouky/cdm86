@@ -30,7 +30,7 @@ INSERT INTO users (
 ) VALUES (
     gen_random_uuid(),
     'admin@cdm86.com',
-    '$2a$10$rGHvE.3F0kQf5LQJXqJqJeH8WvZxGvQf5O7K8QfH5L6J8H9K0L1M2', -- Password: Admin123!
+    '$2a$10$orbh8LRXb5XZBf3LRP6VdeKcpSF868NfQYZFBegW.LEw7QNhA7P4u', -- Password: Admin123!
     'Admin',
     'CDM86',
     'ADMIN001',
@@ -63,7 +63,7 @@ INSERT INTO users (
 ) VALUES (
     gen_random_uuid(),
     'mario.rossi@test.com',
-    '$2a$10$rGHvE.3F0kQf5LQJXqJqJeH8WvZxGvQf5O7K8QfH5L6J8H9K0L1M2', -- Password: User123!
+    '$2a$10$qeTkDMH0dW3mjaAKr4vZWOE2nCZphcfA4D3XdRZPcwfUfY3e2JiXq', -- Password: User123!
     'Mario',
     'Rossi',
     '+39 333 1234567',
@@ -91,7 +91,7 @@ INSERT INTO users (
 ) VALUES (
     gen_random_uuid(),
     'lucia.verdi@test.com',
-    '$2a$10$rGHvE.3F0kQf5LQJXqJqJeH8WvZxGvQf5O7K8QfH5L6J8H9K0L1M2', -- Password: Partner123!
+    '$2a$10$1qN1qpuGmvrMf8YEZnlHJu8Co1MzhmTIr.P3X4HFmk3lhhhs3fTni', -- Password: Partner123!
     'Lucia',
     'Verdi',
     'LUCIA001',
@@ -118,7 +118,7 @@ INSERT INTO users (
 ) VALUES (
     gen_random_uuid(),
     'giovanni.bianchi@test.com',
-    '$2a$10$rGHvE.3F0kQf5LQJXqJqJeH8WvZxGvQf5O7K8QfH5L6J8H9K0L1M2', -- Password: Test123!
+    '$2a$10$6mqDcb2SfTcZiPXvTdlsK.9Wsl7PXHKjDliEvqzISOmolLImEptJK', -- Password: Test123!
     'Giovanni',
     'Bianchi',
     'GIOVA001',
@@ -145,7 +145,7 @@ INSERT INTO users (
 ) VALUES (
     gen_random_uuid(),
     'sara.neri@test.com',
-    '$2a$10$rGHvE.3F0kQf5LQJXqJqJeH8WvZxGvQf5O7K8QfH5L6J8H9K0L1M2', -- Password: Test123!
+    '$2a$10$6mqDcb2SfTcZiPXvTdlsK.9Wsl7PXHKjDliEvqzISOmolLImEptJK', -- Password: Test123!
     'Sara',
     'Neri',
     'SARA0001',

@@ -526,6 +526,9 @@ body {
 .load-more-section {
     margin-top: var(--space-8);
     text-align: center;
+    display: flex;
+    justify-content: center;
+    width: 100%;
 }
 
 .btn-load-more {
